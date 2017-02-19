@@ -30,20 +30,24 @@ class Notes extends CI_Controller {
     {
         $note = $id ? $this->note_model->get_by_id($id) : $this->note_model->get_last_note();
 
-        if($id && ! $note) {
-            show_404();
-        }
+        if($id && ! $note) 
+		{
+            $this->missing();
+        } 
+		else 
+		{
+			$data = [
+				'note' => $note,
+				'list' => $this->note_model->get_list()
+			];
 
-        $data = [
-            'note' => $note,
-            'list' => $this->note_model->get_list()
-        ];
-
-        $this->_view('notes/index', $data);
+			$this->_view('notes/index', $data);
+		}
     }
 
     public function missing()
     {
+		http_response_code(404);
         $this->_view('notes/missing');
     }
 
